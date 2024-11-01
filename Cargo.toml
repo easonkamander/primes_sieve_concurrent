@@ -1,4 +1,4 @@
 [package]
-name = "primes"
+name = "primes_sieve_concurrent"
 version = "1.0.0"
 edition = "2021"

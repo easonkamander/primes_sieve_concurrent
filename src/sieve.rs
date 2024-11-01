@@ -85,31 +85,14 @@ impl Sieve {
         }
         primes
     }
+}
 
-    #[allow(unused)]
-    pub fn exec_exact(steps: usize) -> Vec<u64> {
-        let mut sieve = Sieve::default();
-        for _ in 2..steps {
-            sieve = sieve.run();
-        }
-        sieve.get()
+impl Sieve {
+    pub(super) fn size(&self) -> usize {
+        self.sieved.len()
     }
 
-    #[allow(unused)]
-    pub fn exec_count(count: usize) -> Vec<u64> {
-        let mut sieve = Sieve::default();
-        while sieve.sieved.len() < count {
-            sieve = sieve.run();
-        }
-        sieve.get()
-    }
-
-    #[allow(unused)]
-    pub fn exec_until(value: u64) -> Vec<u64> {
-        let mut sieve = Sieve::default();
-        while !sieve.sieved.last().is_some_and(|&max| value <= max) {
-            sieve = sieve.run();
-        }
-        sieve.get()
+    pub(super) fn last(&self) -> u64 {
+        self.sieved.last().unwrap().clone()
     }
 }
