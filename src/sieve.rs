@@ -1,18 +1,13 @@
 fn coprime<'a>(iter: impl Iterator<Item = &'a u64>, item: u64) -> bool {
-    for prime in iter {
-        if item % prime == 0 {
-            return false;
-        } else if item < prime * prime {
-            return true;
-        }
-    }
-    true
+    iter.copied()
+        .take_while(|prime| item < prime * prime)
+        .all(|prime| item % prime != 0)
 }
 
 pub struct Sieve {
     /// An initial segment of the prime numbers
     primes: Vec<u64>,
-    /// Coprimes from self.primes less than the product of self.primes
+    /// Positive integers less than the product of self.primes and coprime with self.primes
     sieved: Vec<u64>,
 }
 
@@ -35,7 +30,7 @@ impl Sieve {
             sieved: Vec::from_iter((0..prime).flat_map(|epoch| {
                 self.sieved
                     .iter()
-                    .cloned()
+                    .copied()
                     .map(move |n| epoch * bound + n)
                     .filter(|n| n % prime != 0)
             })),
