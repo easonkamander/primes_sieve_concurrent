@@ -71,8 +71,8 @@ fn main() -> Result<(), Error> {
     println!("Largest: {}", sieve.last().unwrap());
 
     let mut tens = 10;
-    while tens < sieve.len() {
-        println!("The {}th prime is {}", tens, sieve[tens]);
+    while tens <= sieve.len() {
+        println!("The {}th prime is {}", tens, sieve[tens - 1]);
         tens *= 10;
     }
 
