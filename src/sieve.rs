@@ -1,6 +1,6 @@
 fn coprime<'a>(iter: impl Iterator<Item = &'a u64>, item: u64) -> bool {
     iter.copied()
-        .take_while(|prime| item < prime * prime)
+        .take_while(|prime| prime * prime <= item)
         .all(|prime| item % prime != 0)
 }
 
