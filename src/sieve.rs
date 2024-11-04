@@ -58,14 +58,19 @@ impl Sieve {
         let sqrts = std::sync::Arc::new(self.primes);
 
         use core::array::from_fn;
-        const WORKERS: usize = 4;
-
-        let section: [_; WORKERS] = from_fn(|i| {
-            let delta = self.sieved.len() - start;
-            let lhs = start + delta * i / WORKERS;
-            let rhs = start + delta * (i + 1) / WORKERS;
-            Vec::from(&self.sieved[lhs..rhs])
-        });
+        let section: [_; 4] = {
+            let total = self.sieved.len();
+            let basic = (start as f64).powf(1.5);
+            let delta = (total as f64).powf(1.5) - basic;
+            let bound = [
+                start,
+                (basic + 0.25 * delta).powf(2.0 / 3.0) as usize,
+                (basic + 0.50 * delta).powf(2.0 / 3.0) as usize,
+                (basic + 0.75 * delta).powf(2.0 / 3.0) as usize,
+                total,
+            ];
+            from_fn(|i| Vec::from(&self.sieved[bound[i]..bound[i + 1]]))
+        };
         let handles = section.map(|sect| {
             let sqrts = sqrts.clone();
             std::thread::spawn(move || {
